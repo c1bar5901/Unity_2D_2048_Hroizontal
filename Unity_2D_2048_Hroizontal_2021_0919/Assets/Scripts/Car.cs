@@ -69,4 +69,23 @@ public class Car : MonoBehaviour
     public Camera cam;
 
     #endregion
+    #region 存取欄位資料 Set Get
+    //程式入口 : 事件
+    //開始事件 :播放遊戲時執行一次 , 初始設定
+    private void Start()
+    {
+        print("哈摟WWWWWWWW");
+        //取得 Get 欄位資料 ※預設值以屬性面板為主 (Inspector)
+        //語法:
+        //print(欄位資料)
+        print("CC數:" + cc);
+        print(weight);
+        //存取 Set 欄位資料
+        //語法:
+        //欄位資料 指定 值 ;
+        brand = ("BMW");
+        hasSkywindow = false;
+        
+    }
+    #endregion
 }
