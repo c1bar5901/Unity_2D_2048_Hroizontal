@@ -153,6 +153,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96f611f05f738e9489cff8659be2490f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cc: 5000
+  weight: 3
+  brand: "\u8CD3\u58EB"
+  hasSkywindow: 1
+  color1: {r: 0, g: 0, b: 0, a: 0}
+  colorRed: {r: 1, g: 0, b: 0, a: 1}
+  color1Custom: {r: 0, g: 0, b: 1, a: 1}
+  colorCusAlpga: {r: 0, g: 1, b: 0, a: 0.3}
+  v2: {x: 0, y: 0}
+  v2One: {x: 1, y: 1}
+  v2Up: {x: 0, y: 1}
+  v2Custom: {x: 7, y: 9}
+  v3Custom: {x: 1, y: 2, z: 3}
+  v4Custom: {x: 1, y: 2, z: 3, w: 4}
+  kc: 0
+  kcW: 119
+  kcML: 323
+  carBox: {fileID: 493574750}
+  carOil: {fileID: 2132096726}
+  traBox: {fileID: 493574753}
+  sprBox: {fileID: 493574752}
+  cam: {fileID: 1283410687}
 --- !u!212 &493574752
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -212,7 +234,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 493574750}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.9909406, y: -0.99567026, z: 0}
+  m_LocalPosition: {x: -4.76, y: -1.02, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -294,13 +316,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1283410685}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0.0000125966035, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -0.001, z: 0}
 --- !u!1 &2132096726
 GameObject:
   m_ObjectHideFlags: 0
@@ -331,6 +353,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96f611f05f738e9489cff8659be2490f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cc: 1000
+  weight: 3
+  brand: "\u8CD3\u58EB"
+  hasSkywindow: 0
+  color1: {r: 0, g: 0, b: 0, a: 0}
+  colorRed: {r: 1, g: 0, b: 0, a: 1}
+  color1Custom: {r: 0, g: 0, b: 1, a: 1}
+  colorCusAlpga: {r: 0, g: 1, b: 0, a: 0.3}
+  v2: {x: 0, y: 0}
+  v2One: {x: 1, y: 1}
+  v2Up: {x: 0, y: 1}
+  v2Custom: {x: 7, y: 9}
+  v3Custom: {x: 1, y: 2, z: 3}
+  v4Custom: {x: 1, y: 2, z: 3, w: 4}
+  kc: 0
+  kcW: 119
+  kcML: 323
+  carBox: {fileID: 493574750}
+  carOil: {fileID: 2132096726}
+  traBox: {fileID: 2132096729}
+  sprBox: {fileID: 2132096728}
+  cam: {fileID: 1283410687}
 --- !u!212 &2132096728
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -389,10 +433,10 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2132096726}
-  m_LocalRotation: {x: 0.0023069738, y: 0.0023292752, z: -0.710496, w: 0.7036936}
-  m_LocalPosition: {x: -1.53, y: -0.99, z: 0}
-  m_LocalScale: {x: 1.3284, y: 1.3039674, z: 1}
+  m_LocalRotation: {x: 0.002320185, y: -0.002320185, z: 0.707103, w: 0.707103}
+  m_LocalPosition: {x: -2.09, y: -1.04, z: -0.01}
+  m_LocalScale: {x: 0.96586, y: 0.96586, z: 0.96586}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0.376, y: 0, z: -90.551}
+  m_LocalEulerAnglesHint: {x: 0.376, y: 0, z: 90}
