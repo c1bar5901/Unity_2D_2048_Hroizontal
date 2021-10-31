@@ -21,7 +21,7 @@ public class LearnOperator : MonoBehaviour
         //先執行指定運算子右邊在指定給左邊
         #endregion
 
-        #region
+        #region 數學運算子
         //加減乘除餘
         //+ - * / %
         print("加法" + (a + b));      //結果 13
@@ -39,6 +39,44 @@ public class LearnOperator : MonoBehaviour
         print("HP 結果：" + hp);
         hp += 10;                     //是用數學運算子 += -= /= %=
         print("HP 結果：" + hp);
+        #endregion
+
+        #region 比較運算子
+        //大於、小於、大於等於、小於等於、等於、不等於
+        // >     <     >=        <=     ==    !=
+        //比較兩個值，並且得到布林值結果
+
+        print("a > b" + (a > b));    //t
+        print("a > b" + (a < b));    //f
+        print("a > b" + (a >= b));   //t
+        print("a > b" + (a <= b));   //f
+        print("a > b" + (a == b));   //f
+        print("a > b" + (a != b));   //t
+        #endregion
+
+        #region
+        //並且、或者、顛倒
+        // &&   ||    !
+        //並且、或者
+        //比較兩個布林值，並且得到布林值結果
+        //並且：只要有一個 f 結果就是 f
+        print("t && t" + (true && true));       //t
+        print("f && t" + (false && true));       //f
+        print("t && f" + (true && false));       //f
+        print("f && f" + (false && false));       //f
+        //或者：只要有一個 t 結果就是 t
+        print("t || t" + (true || true));       //t
+        print("f || t" + (false || true));       //t
+        print("t || f" + (true || false));       //t
+        print("f || f" + (false || false));       //f
+        //Alt + Shift + > 快速讀取
+
+        //顛倒：只能用在布林值
+        print(!true);               //f
+        print(!(a > b));            //f
+        print(!(true && true));      //f
+
+
         #endregion
     }
 }
