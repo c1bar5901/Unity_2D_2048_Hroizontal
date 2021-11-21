@@ -10,6 +10,8 @@ using UnityEngine;
 /// </summary>
 public class System2048 : MonoBehaviour
 {
+    [Header("空白區塊")]
+    public Transform[] blocksEmpty;
     /// <summary>
     /// 所有區塊資料
     /// </summary>
@@ -30,8 +32,27 @@ public class System2048 : MonoBehaviour
             for (int j = 0; j < blocks.GetLength(1); j++)
             {
                 blocks[i, j] = new BlockData();
+                blocks[i, j].v2Index = new Vector2Int(i, j);
+                blocks[i, j].v2Position = blocksEmpty[i * blocks.GetLength(1) + j].position;
             }
         }
+
+        printBlockData();
+    }
+
+    private void printBlockData()
+    {
+        string result = "";
+
+        for (int i = 0; i < blocks.GetLength(0); i++)
+        {
+            for (int j = 0; j < blocks.GetLength(1); j++)
+            {
+                result += "編號(" + blocks[i,j].v2Index + ")" + "<color=green>數字：" + blocks[i,j].number + "</color>" +blocks[i, j].v2Position + "|";
+            }
+            result += "\n";
+        }
+        print(result);
     }
     /// <summary>
     /// 區塊資料
