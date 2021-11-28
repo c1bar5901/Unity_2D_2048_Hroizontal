@@ -12,26 +12,51 @@ using System.Runtime.InteropServices.ComTypes;
 /// </summary>
 public class System2048 : MonoBehaviour
 {
+    #region 欄位:公開
     [Header("空白區塊")]
     public Transform[] blocksEmpty;
     [Header("數字區塊")]
     public GameObject goNumberBlock;
     [Header("畫布 2048")]
     public Transform traCavnas2048;
+    #endregion
 
+    #region 欄位:私人
     //私人欄位顯示在屬性面板上
     [SerializeField]
     private Direction direction;
     /// <summary>
     /// 所有區塊資料
     /// </summary>
-    public BlockData[,] blocks = new BlockData[4, 4];
+    private BlockData[,] blocks = new BlockData[4, 4];
 
+    /// <summary>
+    /// 按下座標
+    /// </summary>
+    private Vector3 posDown;
+    /// <summary>
+    /// 放開座標
+    /// </summary>
+    private Vector3 posUP;
+    /// <summary>
+    /// 是否按下左鍵
+    /// </summary>
+    private bool isClickMouse;
+    #endregion
+
+    #region 事件
     private void Start()
     {
         Initialize();
     }
 
+    private void Update()
+    {
+        CheckDirection();
+    }
+    #endregion
+
+    #region 方法:私人
     /// <summary>
     /// 初始化資料
     /// </summary>
@@ -104,6 +129,70 @@ public class System2048 : MonoBehaviour
         //儲存 生成區塊 資料 
         dataRandom.goBlock = tempBlock;
     }
+
+    ///<summary>
+    /// 檢查方向
+    /// </summary>
+    private void CheckDirection()
+    {
+        #region 鍵盤
+        if (Input.GetKeyDown(KeyCode.W) ||Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            direction = Direction.Up;
+        }
+        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            direction = Direction.Down;
+        }
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            direction = Direction.Left;
+        }
+        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            direction = Direction.Right;
+        }
+        #endregion
+
+        #region 滑鼠與觸控
+        if(!isClickMouse && Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            isClickMouse = true;
+            posDown = Input.mousePosition;
+            print("按下座標"+posDown);
+        }
+        else if(isClickMouse && Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            isClickMouse = false;
+            posUP = Input.mousePosition;
+            print("放開左鍵"+posUP);
+
+            // 1. 計算向量值 放開座標 - 按下座標
+            Vector3 directionValue = posUP - posDown;
+            print("向量值:" + directionValue);
+            // 2. 轉換成 0 ~ 1 值
+            print("轉換後值:" + directionValue.normalized);
+
+            // 方向 X 與 Y 取絕對值
+            float xAbs = Mathf.Abs(directionValue.x);
+            float yAbs = Mathf.Abs(directionValue.y);
+            // X > Y 水平方向
+            if(xAbs > yAbs)
+            {
+                print("水平方向");
+            }
+            // Y > X 垂直方向
+            if (yAbs > xAbs)
+            {
+                print("垂直方向");
+            }
+        }
+
+        
+        #endregion
+    }
+#endregion
+
     /// <summary>
     /// 區塊資料
     /// 每個區塊遊戲物件、座標、編號、數字
