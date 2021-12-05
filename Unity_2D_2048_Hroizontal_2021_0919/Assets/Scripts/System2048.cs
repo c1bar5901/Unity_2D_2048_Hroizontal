@@ -29,7 +29,7 @@ public class System2048 : MonoBehaviour
     /// <summary>
     /// 所有區塊資料
     /// </summary>
-    private BlockData[,] blocks = new BlockData[1, 4];
+    private BlockData[,] blocks = new BlockData[4, 4];
 
     /// <summary>
     /// 按下座標
@@ -145,22 +145,22 @@ public class System2048 : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W) ||Input.GetKeyDown(KeyCode.UpArrow))
         {
             direction = Direction.Up;
-            CheckAndBlock();
+            CheckAndMoveBlock();
         }
         if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
             direction = Direction.Down;
-            CheckAndBlock();
+            CheckAndMoveBlock();
         }
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
             direction = Direction.Left;
-            CheckAndBlock();
+            CheckAndMoveBlock();
         }
         if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
             direction = Direction.Right;
-            CheckAndBlock();
+            CheckAndMoveBlock();
         }
         #endregion
 
@@ -191,35 +191,75 @@ public class System2048 : MonoBehaviour
             {
                 if (directionValue.normalized.x > 0) direction = Direction.Right;
                 else direction = Direction.Left;
-                CheckAndBlock();
+                CheckAndMoveBlock();
             }
             // Y > X 垂直方向
             if (yAbs > xAbs)
             {
                 if (directionValue.normalized.y > 0) direction = Direction.Up;
                 else direction = Direction.Down;
-                CheckAndBlock();
+                CheckAndMoveBlock();
             }
         }
         #endregion
     }
 
-    private void CheckAndBlock()
+    private void CheckAndMoveBlock()
     {
         print("目前的方向:" + direction);
+        BlockData blockOrinal = new BlockData();        //原始有數字的區塊
+        BlockData blockCheck = new BlockData();         //檢查旁邊的區塊
+        bool canMove = false;                           //是否可以移動區塊
+        bool sameNumber = false;                        //是否相同數字
+   
+
         switch (direction)
         {
             case Direction.Right:
+                for (int i = 0; i < blocks.GetLength(0); i++)
+                {
+                    for (int j = blocks.GetLength(1)-2; j >= 0; j--)
+                    {
+                        blockOrinal = blocks[i, j];
+
+                        // 如果 該區塊的數字 為零 就 繼續 (跳過此迴圈執行下個迴圈)
+                        if (blockOrinal.number == 0) continue;
+                        for (int k = j + 1; k < blocks.GetLength(1); k++)
+                        {
+                            if (blocks[i, k].number == 0)
+                            {
+                                blockCheck = blocks[i, k];
+                                canMove = true;
+                            }
+                            else if (blocks[i, k].number == blockOrinal.number)
+                            {
+                                blockCheck = blocks[i, k];
+                                canMove = true;
+                                sameNumber = true;
+                            }
+                            //否則 如果 檢查區塊 的數字 與 原本區塊 的數字 不相同 就不移動、數字不相同並中斷
+                            else if (blocks[i, k].number != blockOrinal.number)
+                            {
+                                canMove = false;
+                                sameNumber = false;
+                                break;
+                            }
+                        }
+
+                        //如果 可以移動 在執行 移動區塊(開始，檢查，是否相同數字)
+                        if (canMove) MoveBlock(blockOrinal, blockCheck, sameNumber);
+                        {
+
+                        }
+                    }
+                }
+
                 break;
             case Direction.Left:
                 for (int i = 0; i < blocks.GetLength(0); i++)
                 {
-                    for (int j = 0; j < blocks.GetLength(1); j++)
+                    for (int j = 1; j < blocks.GetLength(1); j++)
                     {
-                        BlockData blockOrinal = new BlockData();        //原始有數字的區塊
-                        BlockData blockCheck = new BlockData();         //檢查旁邊的區塊
-                        bool canMove = false;                           //是否可以移動區塊
-                        bool sameNumber = false;                        //是否相同數字
                         blockOrinal = blocks[i, j];
 
                         // 如果 該區塊的數字 為零 就 繼續 (跳過此迴圈執行下個迴圈)
@@ -242,28 +282,10 @@ public class System2048 : MonoBehaviour
                             }
                         }
 
-                        if (canMove)
+                        //如果 可以移動 在執行 移動區塊(開始，檢查，是否相同數字)
+                        if (canMove) MoveBlock(blockOrinal, blockCheck, sameNumber);
                         {
-                            // 將原本的物件移動到檢查數字為零的區塊旁邊
-                            //將原本數字歸零，檢查數字補上
-                            //將原本的物件清空，檢查物件補上
-                            blockOrinal.goBlock.transform.position = blockCheck.v2Position;
-
-                            if (sameNumber)
-                            {
-                                int number = blockCheck.number * 2;
-                                blockCheck.number = number;
-
-                                Destroy(blockOrinal.goBlock);
-                                blockCheck.goBlock.transform.transform.Find("數字").GetComponent<Text>().text = number.ToString();
-                            }
-                            else
-                            {
-                                blockCheck.number = blockOrinal.number;
-                                blockCheck.goBlock = blockOrinal.goBlock;
-                            }
-                            blockOrinal.number = 0;
-                            blockOrinal.goBlock = null;
+                            
                         }
                     }
                 }
@@ -272,13 +294,107 @@ public class System2048 : MonoBehaviour
 
                 break;
             case Direction.Up:
+                for (int i = 0; i < blocks.GetLength(1); i++)
+                {
+                    for (int j = 1; j < blocks.GetLength(0); j++)
+                    {
+                        blockOrinal = blocks[j, i];
+
+                        // 如果 該區塊的數字 為零 就 繼續 (跳過此迴圈執行下個迴圈)
+                        if (blockOrinal.number == 0) continue;
+
+                        for (int k = j - 1; k >= 0; k--)
+                        {
+                            print("檢查次數:" + k);
+
+                            if (blocks[k, i].number == 0)
+                            {
+                                blockCheck = blocks[k, i];
+                                canMove = true;
+                            }
+                            else if (blocks[k, i].number == blockOrinal.number)
+                            {
+                                blockCheck = blocks[k, i];
+                                canMove = true;
+                                sameNumber = true;
+                            }
+                        }
+
+                        //如果 可以移動 在執行 移動區塊(開始，檢查，是否相同數字)
+                        if (canMove) MoveBlock(blockOrinal, blockCheck, sameNumber);
+                        {
+
+                        }
+                    }
+                }
+
                 break;
             case Direction.Down:
+
+                for (int i = 0; i < blocks.GetLength(1); i++)
+                {
+                    for (int j = blocks.GetLength(0) - 2; j >= 0 ; j--)
+                    {
+                        blockOrinal = blocks[j, i];
+
+                        // 如果 該區塊的數字 為零 就 繼續 (跳過此迴圈執行下個迴圈)
+                        if (blockOrinal.number == 0) continue;
+
+                        for (int k = j + 1; k < blocks.GetLength(0); k++)
+                        {
+                            if (blocks[k, i].number == 0)
+                            {
+                                blockCheck = blocks[k, i];
+                                canMove = true;
+                            }
+                            else if (blocks[k, i].number == blockOrinal.number)
+                            {
+                                blockCheck = blocks[k, i];
+                                canMove = true;
+                                sameNumber = true;
+                            }
+                        }
+
+                        //如果 可以移動 在執行 移動區塊(開始，檢查，是否相同數字)
+                        if (canMove) MoveBlock(blockOrinal, blockCheck, sameNumber);
+                    }
+                }
                 break;
-        }
+        }                           //移動後 生成下一顆區塊
+
+        CreateRandomNumberBlock();
     }
 #endregion
 
+/// <summary>
+/// 移動區塊
+/// </summary>
+/// <param name="blockOrinal">原始的區塊，要被移動的</param>
+/// <param name="blockCheck">檢查的區塊，原始區塊旁邊的區塊</param>
+/// <param name="sameNumber">是否相同數字</param>
+private void MoveBlock(BlockData blockOrinal,BlockData blockCheck,bool sameNumber)
+    {
+        // 將原本的物件移動到檢查數字為零的區塊旁邊
+        //將原本數字歸零，檢查數字補上
+        //將原本的物件清空，檢查物件補上
+        blockOrinal.goBlock.transform.position = blockCheck.v2Position;
+
+        if (sameNumber)
+        {
+            int number = blockCheck.number * 2;
+            blockCheck.number = number;
+
+            Destroy(blockOrinal.goBlock);
+            blockCheck.goBlock.transform.transform.Find("數字").GetComponent<Text>().text = number.ToString();
+        }
+        else
+        {
+            blockCheck.number = blockOrinal.number;
+            blockCheck.goBlock = blockOrinal.goBlock;
+        }
+        blockOrinal.number = 0;
+        blockOrinal.goBlock = null;
+    }
     /// <summary>
     /// 區塊資料
     /// 每個區塊遊戲物件、座標、編號、數字
