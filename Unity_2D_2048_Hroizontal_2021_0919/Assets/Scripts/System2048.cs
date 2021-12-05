@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;       //引用 Unity 事件 命名空間
 using System.Linq;
 
 
@@ -20,6 +21,8 @@ public class System2048 : MonoBehaviour
     public GameObject goNumberBlock;
     [Header("畫布 2048")]
     public Transform traCavnas2048;
+    [Header("數字相同合併事件")]
+    public UnityEvent onSameNumberCombinre;
     #endregion
 
     #region 欄位:私人
@@ -240,16 +243,16 @@ public class System2048 : MonoBehaviour
                             //否則 如果 檢查區塊 的數字 與 原本區塊 的數字 不相同 就不移動、數字不相同並中斷
                             else if (blocks[i, k].number != blockOrinal.number)
                             {
-                                canMove = false;
-                                sameNumber = false;
                                 break;
                             }
                         }
 
                         //如果 可以移動 在執行 移動區塊(開始，檢查，是否相同數字)
-                        if (canMove) MoveBlock(blockOrinal, blockCheck, sameNumber);
+                        if (canMove) 
                         {
-
+                            canMove = false;
+                            MoveBlock(blockOrinal, blockCheck, sameNumber);
+                            sameNumber = false;
                         }
                     }
                 }
@@ -274,18 +277,25 @@ public class System2048 : MonoBehaviour
                                 blockCheck = blocks[i, k];
                                 canMove = true;
                             }
-                            else if(blocks[i, k].number == blockOrinal.number)
+                            else if (blocks[i, k].number == blockOrinal.number)
                             {
                                 blockCheck = blocks[i, k];
                                 canMove = true;
                                 sameNumber = true;
                             }
+                            else if (blocks[i, k].number != blockOrinal.number)
+                            {
+                                break;
+                            }
                         }
-
                         //如果 可以移動 在執行 移動區塊(開始，檢查，是否相同數字)
-                        if (canMove) MoveBlock(blockOrinal, blockCheck, sameNumber);
+                        if (canMove) 
                         {
-                            
+                                canMove = false;
+                                MoveBlock(blockOrinal, blockCheck, sameNumber);
+                                sameNumber = false;
+                                break;
+
                         }
                     }
                 }
@@ -318,12 +328,19 @@ public class System2048 : MonoBehaviour
                                 canMove = true;
                                 sameNumber = true;
                             }
+                            else if (blocks[k, i].number != blockOrinal.number)
+                            {
+                                break;
+                            }
                         }
 
                         //如果 可以移動 在執行 移動區塊(開始，檢查，是否相同數字)
-                        if (canMove) MoveBlock(blockOrinal, blockCheck, sameNumber);
+                        if (canMove) 
                         {
-
+                                canMove = false;
+                                MoveBlock(blockOrinal, blockCheck, sameNumber);
+                                sameNumber = false;
+                                break;
                         }
                     }
                 }
@@ -353,15 +370,26 @@ public class System2048 : MonoBehaviour
                                 canMove = true;
                                 sameNumber = true;
                             }
+                            else if (blocks[k, i].number != blockOrinal.number)
+                            {
+                                break;
+                            }
                         }
 
                         //如果 可以移動 在執行 移動區塊(開始，檢查，是否相同數字)
-                        if (canMove) MoveBlock(blockOrinal, blockCheck, sameNumber);
+                        if (canMove) 
+                            {
+                                canMove = false;
+                                MoveBlock(blockOrinal, blockCheck, sameNumber);
+                                sameNumber = false;
+                                break;
+                            }
                     }
                 }
                 break;
-        }                           //移動後 生成下一顆區塊
-
+        }                           
+      
+        //移動後 生成下一顆區塊
         CreateRandomNumberBlock();
     }
 #endregion
@@ -386,6 +414,9 @@ private void MoveBlock(BlockData blockOrinal,BlockData blockCheck,bool sameNumbe
 
             Destroy(blockOrinal.goBlock);
             blockCheck.goBlock.transform.transform.Find("數字").GetComponent<Text>().text = number.ToString();
+
+            // 相同數字合併事件 觸發
+            onSameNumberCombinre.Invoke();
         }
         else
         {
