@@ -5471,6 +5471,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attack: 10
   goTarget: {fileID: 740428746}
+  positionSpawn: {fileID: 1274309329}
+  goAttackParticle: {fileID: 7903492414273505945, guid: 66fa42d3fe0694b4aa58543604dcbddd, type: 3}
+  speed: 500
 --- !u!1 &1208628610
 GameObject:
   m_ObjectHideFlags: 0
