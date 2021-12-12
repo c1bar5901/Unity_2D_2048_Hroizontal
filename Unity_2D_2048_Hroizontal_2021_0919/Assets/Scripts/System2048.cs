@@ -28,6 +28,7 @@ public class System2048 : MonoBehaviour
     #region 欄位:私人
     //私人欄位顯示在屬性面板上
     [SerializeField]
+    private StateTurn stateTurn;
     private Direction direction;
     /// <summary>
     /// 所有區塊資料
@@ -56,7 +57,7 @@ public class System2048 : MonoBehaviour
 
     private void Update()
     {
-        CheckDirection();
+       if(stateTurn == StateTurn.My) CheckDirection();
     }
     #endregion
 
@@ -207,6 +208,12 @@ public class System2048 : MonoBehaviour
         #endregion
     }
 
+    [Header("敵人回合事件")]
+    public UnityEvent onEnemyTurn;
+
+    /// <summary>
+    /// 檢查並移動區塊
+    /// </summary>
     private void CheckAndMoveBlock()
     {
         print("目前的方向:" + direction);
@@ -215,6 +222,7 @@ public class System2048 : MonoBehaviour
         bool canMove = false;                           //是否可以移動區塊
         bool sameNumber = false;                        //是否相同數字
         int sameNumberCount = 0;                        //相同數字合併次數
+        bool canMoveBlockAll = false;                    //是否全部可以移動區塊
 
         switch (direction)
         {
@@ -229,6 +237,7 @@ public class System2048 : MonoBehaviour
 
                         // 如果 該區塊的數字 為零 就 繼續 (跳過此迴圈執行下個迴圈)
                         if (blockOrinal.number == 0) continue;
+
                         for (int k = j + 1; k < blocks.GetLength(1) - sameNumberCount; k++)
                         {
                             if (blocks[i, k].number == 0)
@@ -253,6 +262,7 @@ public class System2048 : MonoBehaviour
                         //如果 可以移動 在執行 移動區塊(開始，檢查，是否相同數字)
                         if (canMove)
                         {
+                            canMoveBlockAll = true;                             //全部區塊內可以移動
                             canMove = false;
                             MoveBlock(blockOrinal, blockCheck, sameNumber);
                             sameNumber = false;
@@ -295,6 +305,7 @@ public class System2048 : MonoBehaviour
                         //如果 可以移動 在執行 移動區塊(開始，檢查，是否相同數字)
                         if (canMove)
                         {
+                            canMoveBlockAll = true;                             //全部區塊內可以移動
                             canMove = false;
                             MoveBlock(blockOrinal, blockCheck, sameNumber);
                             sameNumber = false;
@@ -338,6 +349,7 @@ public class System2048 : MonoBehaviour
                         //如果 可以移動 在執行 移動區塊(開始，檢查，是否相同數字)
                         if (canMove)
                         {
+                            canMoveBlockAll = true;                             //全部區塊內可以移動
                             canMove = false;
                             MoveBlock(blockOrinal, blockCheck, sameNumber);
                             sameNumber = false;
@@ -381,6 +393,7 @@ public class System2048 : MonoBehaviour
                         //如果 可以移動 在執行 移動區塊(開始，檢查，是否相同數字)
                         if (canMove)
                         {
+                            canMoveBlockAll = true;                              //全部區塊內可以移動
                             canMove = false;
                             MoveBlock(blockOrinal, blockCheck, sameNumber);
                             sameNumber = false;
@@ -391,8 +404,26 @@ public class System2048 : MonoBehaviour
                 break;
         }
 
+        if(canMoveBlockAll)
+        {
+            onEnemyTurn.Invoke();
+            stateTurn = StateTurn.Enemy;
+            CreateRandomNumberBlock();
+        }
+        else
+        {
+            print("不能移動");
+        }
         //移動後 生成下一顆區塊
         CreateRandomNumberBlock();
+    }
+    #endregion
+
+    #region 方法 : 公開
+
+    public void ChangeToMyTurn()
+    {
+        stateTurn = StateTurn.My;
     }
     #endregion
 
@@ -455,8 +486,19 @@ public class System2048 : MonoBehaviour
         public int number;
     }
 
+    /// <summary>
+    /// 方向列舉 : 無、上、下、左、右
+    /// </summary>
     public enum Direction
     {
         None, Right, Left, Up, Down
+    }
+
+    /// <summary>
+    /// 回合狀態 : 我方、敵方
+    /// </summary>
+    public enum StateTurn
+    {
+        My, Enemy
     }
 }
